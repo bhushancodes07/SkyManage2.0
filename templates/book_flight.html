@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Book Flight | Airport Management System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            ✈️
+            <span>SkyManage</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('passenger_dashboard') }}" class="nav-item">
+                🏠
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('search_flights') }}" class="nav-item active">
+                🔎
+                <span>Search Flights</span>
+            </a>
+
+            <a href="{{ url_for('my_bookings') }}" class="nav-item">
+                🎫
+                <span>My Bookings</span>
+            </a>
+
+            <a href="{{ url_for('flight_status') }}" class="nav-item">
+                📍
+                <span>Flight Status</span>
+            </a>
+
+            <a href="{{ url_for('profile') }}" class="nav-item">
+                👤
+                <span>My Profile</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}" class="nav-item logout">
+                🚪
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+
+            <div>
+                <h1>Book Your Flight</h1>
+                <p>Review your flight details and complete your booking</p>
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+                    {{ session["name"][0].upper() }}
+                </div>
+
+                <div>
+                    <strong>{{ session["name"] }}</strong>
+                    <small>Passenger</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Error Message -->
+        {% if error %}
+
+        <div class="error-message">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <!-- Booking Layout -->
+        <section class="booking-container">
+
+            <!-- Flight Details -->
+            <div class="booking-flight-card">
+
+                <div class="booking-card-header">
+                    <div>
+                        <h2>✈️ Flight Details</h2>
+                        <p>Your selected flight</p>
+                    </div>
+
+                    <span class="booking-status">
+                        {{ flight.status }}
+                    </span>
+                </div>
+
+
+                <div class="booking-airline">
+
+                    <div class="airline-icon">
+                        ✈️
+                    </div>
+
+                    <div>
+                        <h3>{{ flight.airline_name }}</h3>
+                        <span>{{ flight.airline_code }}</span>
+                    </div>
+
+                </div>
+
+
+                <!-- Route -->
+                <div class="booking-route">
+
+                    <div class="booking-airport">
+
+                        <strong>{{ flight.source }}</strong>
+
+                        <span>
+                            {{ flight.departure_time.strftime('%d %b %Y') }}
+                        </span>
+
+                        <span>
+                            {{ flight.departure_time.strftime('%I:%M %p') }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="booking-route-line">
+
+                        <span>✈️</span>
+
+                    </div>
+
+
+                    <div class="booking-airport">
+
+                        <strong>{{ flight.destination }}</strong>
+
+                        <span>
+                            {{ flight.arrival_time.strftime('%d %b %Y') }}
+                        </span>
+
+                        <span>
+                            {{ flight.arrival_time.strftime('%I:%M %p') }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Flight Information -->
+                <div class="booking-info-grid">
+
+                    <div>
+                        <small>Flight Number</small>
+                        <strong>{{ flight.flight_number }}</strong>
+                    </div>
+
+                    <div>
+                        <small>Gate</small>
+                        <strong>
+                            {{ flight.gate_number or 'Not Assigned' }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>Terminal</small>
+                        <strong>
+                            {{ flight.terminal or 'Not Assigned' }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>Available Seats</small>
+                        <strong>
+                            {{ flight.available_seats }}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Booking Form -->
+            <div class="booking-form-card">
+
+                <h2>Booking Details</h2>
+
+                <p class="booking-subtitle">
+                    Select your preferred class and enter your seat number.
+                </p>
+
+
+                <form method="POST" action="{{ url_for('book_flight', flight_id=flight.flight_id) }}" id="bookingForm">
+
+
+                    <!-- Class -->
+                    <div class="booking-input-group">
+
+                        <label for="class">
+                            Travel Class
+                        </label>
+
+                        <select id="class" name="class" required>
+
+                            <option value="">
+                                Select Class
+                            </option>
+
+                            <option value="Economy">
+                                Economy
+                            </option>
+
+                            <option value="Business">
+                                Business
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Seat -->
+                    <div class="booking-input-group">
+
+                        <label for="seat_number">
+                            Seat Number
+                        </label>
+
+                        <input type="text" id="seat_number" name="seat_number" placeholder="Example: 12A" maxlength="10"
+                            required>
+
+                        <small class="input-help">
+                            Enter your preferred seat number.
+                        </small>
+
+                    </div>
+
+
+                    <!-- Amount -->
+                    <div class="fare-box">
+
+                        <div>
+                            <span>Booking Amount</span>
+                            <strong id="fareAmount">
+                                ₹{{ "%.2f"|format(flight.amount) }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Confirm -->
+                    <button type="submit" class="confirm-booking-btn">
+                        Confirm Booking
+                    </button>
+
+
+                    <a href="{{ url_for('search_flights') }}" class="cancel-booking-btn">
+                        Back to Search
+                    </a>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+    <script>
+        const classSelect = document.getElementById('class');
+        const fareAmount = document.getElementById('fareAmount');
+
+        const economyFare = 5000.00;
+        const businessFare = 8000.00;
+
+        classSelect.addEventListener('change', function () {
+            let amount = economyFare;
+
+            if (this.value === 'Business') {
+                amount = businessFare;
+            }
+
+            fareAmount.textContent = '₹' + amount.toFixed(2);
+        });
+    </script>
+
+
+</body>
+
+</html>

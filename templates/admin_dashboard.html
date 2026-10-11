@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | Airport Management System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            ✈️
+            <span>SkyManage</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-item active">
+                🏠
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('admin_flights') }}" class="nav-item">
+                🛫
+                <span>Flights</span>
+            </a>
+
+            <a href="{{ url_for('admin_airlines') }}" class="nav-item">
+                🏢
+                <span>Airlines</span>
+            </a>
+
+            <a href="{{ url_for('admin_gates') }}" class="nav-item">
+                🚪
+                <span>Gates</span>
+            </a>
+
+            <a href="{{ url_for('admin_bookings') }}" class="nav-item">
+                🎫
+                <span>Bookings</span>
+            </a>
+            <a href="{{ url_for('admin_passengers') }}" class="nav-item">
+                👥
+                <span>Passengers</span>
+            </a>
+
+            <a href="{{ url_for('admin_employees') }}" class="nav-item">
+                👨‍💼
+                <span>Employees</span>
+            </a>
+            <a href="{{ url_for('admin_reports') }}" class="nav-item">
+                📊
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}" class="nav-item logout">
+                🚪
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p>Manage flights, airlines, gates, and bookings</p>
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+                    {{ session["name"][0].upper() }}
+                </div>
+
+                <div>
+                    <strong>{{ session["name"] }}</strong>
+                    <small>Admin</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Summary -->
+        <section class="booking-summary" style="grid-template-columns: repeat(5, 1fr);">
+
+            <div class="summary-card">
+                <div class="summary-icon">🛫</div>
+                <div>
+                    <span>Total Flights</span>
+                    <strong>{{ total_flights }}</strong>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">🏢</div>
+                <div>
+                    <span>Airlines</span>
+                    <strong>{{ total_airlines }}</strong>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">🚪</div>
+                <div>
+                    <span>Gates</span>
+                    <strong>{{ total_gates }}</strong>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">🎫</div>
+                <div>
+                    <span>Confirmed Bookings</span>
+                    <strong>{{ total_bookings }}</strong>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">👤</div>
+                <div>
+                    <span>Passengers</span>
+                    <strong>{{ total_passengers }}</strong>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- Quick Links -->
+        <section class="dashboard-cards">
+
+            <div class="dashboard-card">
+                <div class="card-icon">🛫</div>
+                <div>
+                    <h3>Flights</h3>
+                    <p>Add, edit, or remove flights.</p>
+                </div>
+                <a href="{{ url_for('admin_flights') }}" class="card-button">Manage</a>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-icon">🏢</div>
+                <div>
+                    <h3>Airlines</h3>
+                    <p>Add, edit, or remove airlines.</p>
+                </div>
+                <a href="{{ url_for('admin_airlines') }}" class="card-button">Manage</a>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-icon">🚪</div>
+                <div>
+                    <h3>Gates</h3>
+                    <p>Add, edit, or remove gates.</p>
+                </div>
+                <a href="{{ url_for('admin_gates') }}" class="card-button">Manage</a>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-icon">🎫</div>
+                <div>
+                    <h3>Bookings</h3>
+                    <p>View all passenger bookings.</p>
+                </div>
+                <a href="{{ url_for('admin_bookings') }}" class="card-button">View</a>
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

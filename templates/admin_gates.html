@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Gates | Airport Management System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            ✈️
+            <span>SkyManage</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-item">
+                🏠
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('admin_flights') }}" class="nav-item">
+                🛫
+                <span>Flights</span>
+            </a>
+
+            <a href="{{ url_for('admin_airlines') }}" class="nav-item">
+                🏢
+                <span>Airlines</span>
+            </a>
+
+            <a href="{{ url_for('admin_gates') }}" class="nav-item active">
+                🚪
+                <span>Gates</span>
+            </a>
+
+            <a href="{{ url_for('admin_bookings') }}" class="nav-item">
+                🎫
+                <span>Bookings</span>
+            </a>
+            <a href="{{ url_for('admin_passengers') }}" class="nav-item">
+                👥
+                <span>Passengers</span>
+            </a>
+
+            <a href="{{ url_for('admin_employees') }}" class="nav-item">
+                👨‍💼
+                <span>Employees</span>
+            </a>
+            <a href="{{ url_for('admin_reports') }}" class="nav-item">
+                📊
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}" class="nav-item logout">
+                🚪
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+
+            <div>
+                <h1>Manage Gates</h1>
+                <p>Add, edit, or remove gates</p>
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+                    {{ session["name"][0].upper() }}
+                </div>
+
+                <div>
+                    <strong>{{ session["name"] }}</strong>
+                    <small>Admin</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+
+
+        <section class="my-bookings-section">
+
+            <div class="section-heading">
+                <div>
+                    <h2>All Gates</h2>
+                    <p>{{ gates|length }} gate(s) in the system.</p>
+                </div>
+
+                <a href="{{ url_for('admin_add_gate') }}" class="new-booking-btn">
+                    + Add Gate
+                </a>
+            </div>
+
+
+            {% if gates %}
+
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; background: white;">
+
+                    <thead>
+                        <tr style="text-align: left; border-bottom: 2px solid #e5e7eb;">
+                            <th style="padding: 12px;">Gate Number</th>
+                            <th style="padding: 12px;">Terminal</th>
+                            <th style="padding: 12px;">Status</th>
+                            <th style="padding: 12px;">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for gate in gates %}
+
+                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                            <td style="padding: 12px;"><strong>{{ gate.gate_number }}</strong></td>
+                            <td style="padding: 12px;">{{ gate.terminal }}</td>
+                            <td style="padding: 12px;">{{ gate.status }}</td>
+
+                            <td style="padding: 12px; white-space: nowrap;">
+
+                                <a href="{{ url_for('admin_edit_gate', gate_id=gate.gate_id) }}" class="card-button"
+                                    style="margin-right: 6px;">
+                                    Edit
+                                </a>
+
+                                <form method="POST" action="{{ url_for('admin_delete_gate', gate_id=gate.gate_id) }}"
+                                    style="display: inline;" onsubmit="return confirm('Delete this gate?');">
+                                    <button type="submit" class="cancel-booking-action"
+                                        style="cursor: pointer; border: none; background: none;">
+                                        Delete
+                                    </button>
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+            </div>
+
+            {% else %}
+
+            <div class="empty-state">
+                <div class="empty-icon">🚪</div>
+                <h3>No gates yet</h3>
+                <p>Add your first gate to get started.</p>
+            </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

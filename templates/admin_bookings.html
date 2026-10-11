@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Bookings | Airport Management System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- =========================================
+         SIDEBAR
+         ========================================= -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            ✈️
+            <span>SkyManage</span>
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-item">
+
+                🏠
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="{{ url_for('admin_flights') }}" class="nav-item">
+
+                ✈️
+                <span>Manage Flights</span>
+
+            </a>
+
+
+            <a href="{{ url_for('admin_airlines') }}" class="nav-item">
+
+                🏢
+                <span>Manage Airlines</span>
+
+            </a>
+
+
+            <a href="{{ url_for('admin_gates') }}" class="nav-item">
+
+                🚪
+                <span>Manage Gates</span>
+
+            </a>
+
+
+            <a href="{{ url_for('admin_bookings') }}" class="nav-item active">
+
+                🎫
+                <span>Manage Bookings</span>
+
+            </a>
+
+
+            <a href="{{ url_for('admin_passengers') }}" class="nav-item">
+
+                👥
+                <span>Passengers</span>
+
+            </a>
+
+
+            <a href="{{ url_for('admin_employees') }}" class="nav-item">
+
+                👨‍💼
+                <span>Employees</span>
+
+            </a>
+
+
+            <a href="{{ url_for('admin_reports') }}" class="nav-item">
+                📊
+                <span>Reports</span>
+            </a>
+        </nav>
+
+
+        <!-- Sidebar Bottom -->
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}" class="nav-item logout">
+
+                🚪
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         MAIN CONTENT
+         ========================================= -->
+
+    <main class="main-content">
+
+
+        <!-- Header -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>Manage Bookings</h1>
+
+                <p>
+                    View and manage all passenger flight bookings
+                </p>
+
+            </div>
+
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+
+                    {{ session["name"][0].upper() }}
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        {{ session["name"] }}
+                    </strong>
+
+                    <small>
+                        Administrator
+                    </small>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================================
+             MESSAGES
+             ========================================= -->
+
+        {% if success %}
+
+        <div class="success-message">
+
+            {{ success }}
+
+        </div>
+
+        {% endif %}
+
+
+        {% if error %}
+
+        <div class="error-message">
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- =========================================
+             BOOKING STATISTICS
+             ========================================= -->
+
+        <section class="booking-summary">
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    🎫
+                </div>
+
+                <div>
+
+                    <span>
+                        Total Bookings
+                    </span>
+
+                    <strong>
+                        {{ total_bookings }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    ✅
+                </div>
+
+                <div>
+
+                    <span>
+                        Confirmed
+                    </span>
+
+                    <strong>
+                        {{ confirmed_bookings }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    ❌
+                </div>
+
+                <div>
+
+                    <span>
+                        Cancelled
+                    </span>
+
+                    <strong>
+                        {{ cancelled_bookings }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    💰
+                </div>
+
+                <div>
+
+                    <span>
+                        Total Revenue
+                    </span>
+
+                    <strong>
+                        ₹{{ "%.2f"|format(total_revenue) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             SEARCH / FILTER
+             ========================================= -->
+
+        <section class="admin-bookings-panel">
+
+            <div class="admin-bookings-header">
+
+                <div>
+
+                    <h2>
+                        All Bookings
+                    </h2>
+
+                    <p>
+                        Search and manage passenger reservations
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="booking-search-area">
+
+                <form method="GET" action="{{ url_for('admin_bookings') }}" class="booking-search-form">
+
+                    <input type="text" name="search" placeholder="Search by booking ID, passenger, email or flight..."
+                        value="{{ search or '' }}">
+
+
+                    <select name="status">
+
+                        <option value="">
+                            All Status
+                        </option>
+
+                        <option value="Confirmed" {% if status=='Confirmed' %} selected {% endif %}>
+                            Confirmed
+                        </option>
+
+                        <option value="Cancelled" {% if status=='Cancelled' %} selected {% endif %}>
+                            Cancelled
+                        </option>
+
+                        <option value="Pending" {% if status=='Pending' %} selected {% endif %}>
+                            Pending
+                        </option>
+
+                    </select>
+
+
+                    <button type="submit">
+                        🔍 Search
+                    </button>
+
+
+                    <a href="{{ url_for('admin_bookings') }}">
+                        Reset
+                    </a>
+
+                </form>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 BOOKINGS TABLE
+                 ========================================= -->
+
+            {% if bookings %}
+
+            <div class="admin-bookings-table-wrapper">
+
+                <table class="admin-bookings-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Booking
+                            </th>
+
+                            <th>
+                                Passenger
+                            </th>
+
+                            <th>
+                                Flight
+                            </th>
+
+                            <th>
+                                Route
+                            </th>
+
+                            <th>
+                                Seat
+                            </th>
+
+                            <th>
+                                Class
+                            </th>
+
+                            <th>
+                                Amount
+                            </th>
+
+                            <th>
+                                Booking Date
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for booking in bookings %}
+
+                        <tr>
+
+
+                            <!-- Booking ID -->
+
+                            <td>
+
+                                <strong class="booking-id">
+
+                                    #{{ booking.booking_id }}
+
+                                </strong>
+
+                            </td>
+
+
+
+                            <!-- Passenger -->
+
+                            <td>
+
+                                <div class="admin-passenger-info">
+
+                                    <strong>
+
+                                        {{ booking.passenger_name }}
+
+                                    </strong>
+
+                                    <small>
+
+                                        {{ booking.email }}
+
+                                    </small>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <!-- Flight -->
+
+                            <td>
+
+                                <div class="admin-flight-info">
+
+                                    <strong>
+
+                                        {{ booking.flight_number }}
+
+                                    </strong>
+
+                                    <small>
+
+                                        {{ booking.airline_name }}
+
+                                    </small>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <!-- Route -->
+
+                            <td>
+
+                                <div class="admin-route">
+
+                                    <strong>
+
+                                        {{ booking.source }}
+
+                                    </strong>
+
+                                    <span>
+                                        →
+                                    </span>
+
+                                    <strong>
+
+                                        {{ booking.destination }}
+
+                                    </strong>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <!-- Seat -->
+
+                            <td>
+
+                                <span class="seat-badge">
+
+                                    {{ booking.seat_number }}
+
+                                </span>
+
+                            </td>
+
+
+
+                            <!-- Class -->
+
+                            <td>
+
+                                {{ booking.class }}
+
+                            </td>
+
+
+
+                            <!-- Amount -->
+
+                            <td>
+
+                                <strong>
+
+                                    ₹{{ "%.2f"|format(booking.amount) }}
+
+                                </strong>
+
+                            </td>
+
+
+
+                            <!-- Booking Date -->
+
+                            <td>
+
+                                <div class="admin-date">
+
+                                    {{ booking.booking_date.strftime('%d %b %Y') }}
+
+                                    <small>
+
+                                        {{ booking.booking_date.strftime('%I:%M %p') }}
+
+                                    </small>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <!-- Status -->
+
+                            <td>
+
+                                <span class="
+                                    admin-booking-status
+                                    {% if booking.booking_status == 'Confirmed' %}
+                                        confirmed
+                                    {% elif booking.booking_status == 'Cancelled' %}
+                                        cancelled
+                                    {% else %}
+                                        pending
+                                    {% endif %}
+                                ">
+
+                                    {{ booking.booking_status }}
+
+                                </span>
+
+                            </td>
+
+
+
+                            <!-- Action -->
+
+                            <td>
+
+                                {% if booking.booking_status == 'Confirmed' %}
+
+                                <form method="POST" action="/admin/bookings/{{ booking.booking_id }}/cancel"
+                                    onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+
+                                    <button type="submit" class="admin-cancel-btn">
+
+                                        Cancel
+
+                                    </button>
+
+                                </form>
+
+                                {% else %}
+
+                                <span class="no-action">
+                                    —
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {% else %}
+
+            <!-- =========================================
+                 NO BOOKINGS
+                 ========================================= -->
+
+            <div class="admin-empty-bookings">
+
+                <div class="admin-empty-icon">
+                    🎫
+                </div>
+
+                <h3>
+                    No Bookings Found
+                </h3>
+
+                <p>
+
+                    There are currently no bookings matching
+                    your search criteria.
+
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- JavaScript -->
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>

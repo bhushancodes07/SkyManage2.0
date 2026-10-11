@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register | Airport Management System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <div class="register-container">
+
+        <div class="register-box">
+
+            <div class="logo">
+                ✈️
+            </div>
+
+            <h1>Create Account</h1>
+
+            <p class="subtitle">
+                Register as a passenger
+            </p>
+            {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            {% if success %}
+            <div class="success-message">
+                {{ success }}
+            </div>
+            {% endif %}
+
+            <form id="registerForm" method="POST" action="/register">
+
+                <!-- Name -->
+                <div class="input-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                </div>
+
+                <!-- Email -->
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <!-- Phone -->
+                <div class="input-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" maxlength="15"
+                        required>
+                </div>
+
+                <!-- Gender -->
+                <div class="input-group">
+                    <label for="gender">Gender</label>
+
+                    <select id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="input-group">
+                    <label for="date_of_birth">Date of Birth</label>
+
+                    <input type="date" id="date_of_birth" name="date_of_birth" required>
+                </div>
+
+                <!-- Passport -->
+                <div class="input-group">
+                    <label for="passport_no">Passport Number</label>
+
+                    <input type="text" id="passport_no" name="passport_no" placeholder="Enter passport number"
+                        maxlength="20" required>
+                </div>
+
+                <!-- Password -->
+                <div class="input-group">
+                    <label for="password">Password</label>
+
+                    <div class="password-box">
+
+                        <input type="password" id="password" name="password" placeholder="Create a password" required>
+
+                        <button type="button" id="toggleRegisterPassword" class="toggle-password">
+                            Show
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="input-group">
+                    <label for="confirm_password">Confirm Password</label>
+
+                    <div class="password-box">
+
+                        <input type="password" id="confirm_password" name="confirm_password"
+                            placeholder="Confirm your password" required>
+
+                        <button type="button" id="toggleConfirmPassword" class="toggle-password">
+                            Show
+                        </button>
+
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    Create Account
+                </button>
+
+            </form>
+
+            <p class="register-text">
+                Already have an account?
+                <a href="/login">Login here</a>
+            </p>
+
+        </div>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>
