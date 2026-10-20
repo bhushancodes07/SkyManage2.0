@@ -1,276 +1,392 @@
+
 <div align="center">
 
+# ✈️ SkyManage 2.0
 
+### Airport Management & Flight Booking System
 
-# ✈️ SkyManage — Airport Management System
+**A Full-Stack Web Application for Smart Airport Operations**
 
-**A full-stack flight booking platform with role-based passenger and admin portals.**
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+
+[Features](#-key-features) •
+[Tech Stack](#-technology-stack) •
+[Installation](#-installation--setup) •
+[Developer](#-developer)
+
 </div>
-## Badges
 
-![Python](https://img.shields.io/badge/python-3.9%2B-blue)
-![Flask](https://img.shields.io/badge/flask-2.x-black)
-![MySQL](https://img.shields.io/badge/mysql-8.0%2B-orange)
-![License](https://img.shields.io/badge/license-MIT-green)
+---
 
-## Table of Contents
+## 📖 About the Project
 
-- [Overview](#overview)
-- [Features](#features)
-- [Screenshots / Demo](#screenshots--demo)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Database Schema](#database-schema)
-- [Getting Started](#getting-started)
-- [Creating an Admin Account](#creating-an-admin-account)
-- [Security Notes](#security-notes)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [License](#license)
-- [Author](#author)
+**SkyManage 2.0** is a full-stack Airport Management System developed using Python Flask and MySQL.
 
-## Overview
+The system simplifies airport operations by providing a centralized platform for flight booking, passenger management, airline management, gate assignments, employee management, and administrative reporting.
 
-SkyManage is a full-stack flight booking platform built with Flask and MySQL. It provides two distinct portals — one for passengers to search, book, and manage flights, and one for administrators to manage flights, airlines, gates, bookings, passengers, and employees through a live analytics dashboard. This project was built as a college project to explore full-stack web development with role-based access control.
+The application provides two role-based portals:
 
-## Features
+- **Passenger Portal:** Search flights, book tickets, manage bookings, and check flight status.
+- **Admin Portal:** Manage flights, airlines, passengers, employees, gates, and view reports.
 
-### Passenger Portal
+This project demonstrates practical implementation of full-stack web development, database management, authentication, and CRUD operations.
 
-| Icon | Feature | Description |
-|------|---------|--------------|
-| 🔐 | Authentication | Register and log in as a passenger |
-| 🔍 | Flight Search | Search flights by source, destination, and date |
-| 🎟️ | Flight Booking | Book seats with live fare updates by travel class |
-| 📋 | Manage Bookings | View and cancel existing bookings |
-| 🛫 | Flight Status | Look up real-time status of any flight |
-| 👤 | Profile Management | Edit personal profile information |
-| 📊 | Dashboard | View a summary of recent bookings at a glance |
+---
 
-### Admin Portal
+## 🚀 Key Features
 
-| Icon | Feature | Description |
-|------|---------|--------------|
-| 📈 | Dashboard | Summary stats across flights, bookings, and passengers |
-| ✈️ | Flights CRUD | Create, read, update, and delete flight records |
-| 🏢 | Airlines CRUD | Manage airline records |
-| 🚪 | Gates CRUD | Manage gate assignments |
-| 📦 | Booking Management | Search bookings and filter by status |
-| 🧾 | Passenger Directory | Read-only, searchable list of all passengers |
-| 👥 | Employees CRUD | Full create/read/update/delete for employee records |
-| 📉 | Reports | Live Chart.js graphs for revenue, trends, and routes |
+### 👤 Passenger Portal
 
-## Screenshots / Demo
+- 🔐 Secure Registration and Login
+- 🔎 Search Flights by Source, Destination, and Date
+- 🎫 Flight Ticket Booking
+- 💺 Travel Class Selection
+- 📋 View Booking History
+- ❌ Cancel Bookings
+- ✈️ Check Flight Status
+- 👤 Update Passenger Profile
+- 📊 Personalized Dashboard
 
-Below are placeholders for key screens in the app. 
+### 🛠️ Admin Portal
+
+- 📊 Interactive Admin Dashboard
+- ✈️ Add, Update, and Delete Flights
+- 🏢 Manage Airlines
+- 🚪 Manage Airport Gates
+- 👥 Manage Employees
+- 🧳 View Passenger Information
+- 🎟️ Manage Flight Bookings
+- 📈 View Reports and Analytics
+- 💰 Monitor Booking Revenue
+
+---
+
+## 🖼️ Project Screenshots
+
+### Login Page
 
 ![Login Page](docs/screenshots/login.png)
-*Login page with role-based authentication*
 
-
-![Login Page](docs/screenshots/signup.png)
-*sign in page for passengers*
+### Passenger Dashboard
 
 ![Passenger Dashboard](docs/screenshots/passenger_dashboard.png)
-*Passenger dashboard showing recent bookings*
 
-![Search Flights Results](docs/screenshots/search_flights.png)
-*Flight search results filtered by source, destination, and date*
+### Flight Search
 
-![Book Flight Page](docs/screenshots/book_flight.png)
-*Booking page with live fare updates by class*
+![Flight Search](docs/screenshots/search_flights.png)
 
-![My Bookings Page](docs/screenshots/my_bookings.png)
-*Passenger's view/cancel bookings page*
+### Flight Booking
+
+![Flight Booking](docs/screenshots/book_flight.png)
+
+### My Bookings
+
+![My Bookings](docs/screenshots/my_bookings.png)
+
+### Admin Dashboard
 
 ![Admin Dashboard](docs/screenshots/admin_dashboard.png)
-*Admin dashboard with summary statistics*
 
-![Admin Manage Flights](docs/screenshots/admin_flights.png)
-*Admin flight management with full CRUD*
+### Admin Flight Management
+
+![Flight Management](docs/screenshots/admin_flights.png)
+
+### Admin Reports
 
 ![Admin Reports](docs/screenshots/admin_reports.png)
-*Live analytics dashboard with Chart.js graphs*
 
+---
 
-## Tech Stack
+## 💻 Technology Stack
 
-**Backend**
-- [Python](https://www.python.org/)
-- [Flask](https://flask.palletsprojects.com/)
-- [mysql-connector-python](https://dev.mysql.com/doc/connector-python/en/)
-- [Werkzeug](https://werkzeug.palletsprojects.com/) (password hashing)
-- [Jinja2](https://jinja.palletsprojects.com/) (templating)
+| Component | Technology |
+|-----------|------------|
+| Frontend | HTML5, CSS3, JavaScript |
+| Backend | Python, Flask |
+| Database | MySQL |
+| Template Engine | Jinja2 |
+| Authentication | Flask Sessions, Werkzeug |
+| Database Connector | mysql-connector-python |
+| Data Visualization | Chart.js |
+| Development Environment | Visual Studio Code |
+| Version Control | Git & GitHub |
 
-**Frontend**
-- HTML5 / CSS3 / Vanilla JavaScript
-- [Font Awesome](https://fontawesome.com/) (icons)
-- [Chart.js](https://www.chartjs.org/) (analytics charts)
+---
 
-**Database**
-- [MySQL](https://www.mysql.com/)
-
-## Project Structure
+## 📁 Project Structure
 
 ```text
-SkyManage/
+SkyManage2.0/
+│
+├── app.py
+├── requirements.txt
+├── .env.example
+├── .gitignore
+├── README.md
 │
 ├── database/
-│   └── airport_management.sql       # MySQL database schema
+│   └── airport_management.sql
 │
 ├── static/
 │   ├── css/
-│   │   └── style.css                # Main stylesheet
-│   │
-│   ├── images/
-│   │   └── airport-login.png        # Login page image
-│   │
-│   └── js/
-│       └── script.js                # Client-side JavaScript
+│   │   └── style.css
+│   ├── js/
+│   │   └── script.js
+│   └── images/
 │
 ├── templates/
-│   ├── login.html                   # Passenger/Admin login
-│   ├── register.html                # Passenger registration
-│   ├── passenger_dashboard.html     # Passenger dashboard
-│   ├── search_flights.html          # Flight search
-│   ├── book_flight.html             # Flight booking
-│   ├── my_bookings.html             # Passenger bookings
-│   ├── flight_status.html           # Flight status
-│   ├── profile.html                 # Passenger profile
+│   ├── login.html
+│   ├── register.html
+│   ├── passenger_dashboard.html
+│   ├── search_flights.html
+│   ├── book_flight.html
+│   ├── my_bookings.html
+│   ├── flight_status.html
+│   ├── profile.html
 │   │
-│   ├── admin_dashboard.html         # Admin dashboard
-│   ├── admin_flights.html           # Flight management
-│   ├── admin_flight_form.html       # Add/Edit flight
-│   ├── admin_airlines.html          # Airline management
-│   ├── admin_airline_form.html      # Add/Edit airline
-│   ├── admin_gates.html             # Gate management
-│   ├── admin_gate_form.html         # Add/Edit gate
-│   ├── admin_bookings.html          # Booking management
-│   ├── admin_passengers.html        # Passenger directory
-│   ├── admin_employees.html         # Employee management
-│   ├── admin_employee_form.html     # Add/Edit employee
-│   └── admin_reports.html            # Admin reports and analytics
+│   ├── admin_dashboard.html
+│   ├── admin_flights.html
+│   ├── admin_airlines.html
+│   ├── admin_gates.html
+│   ├── admin_employees.html
+│   ├── admin_passengers.html
+│   ├── admin_bookings.html
+│   └── admin_reports.html
 │
-├── app.py                           # Main Flask application
-└── requirements.txt                 # Python dependencies
+└── docs/
+    └── screenshots/
 ```
-## Database Schema
 
-| Table | Purpose |
-|-------|---------|
-| `users` | Stores login credentials and role (Passenger / Admin) |
-| `passengers` | Passenger profile data, linked to `users` |
-| `airlines` | Airline records |
-| `gates` | Gate records |
-| `flights` | Flight records, linked to `airlines` and `gates` |
-| `bookings` | Booking records, linked to `passengers` and `flights` |
-| `payments` | Payment records (schema exists but not yet wired into the booking flow) |
-| `employees` | Employee records managed by admins |
+---
 
-**Key relationships:**
-- `passengers.user_id` → `users.id`
-- `flights.airline_id` → `airlines.id`
-- `flights.gate_id` → `gates.id`
-- `bookings.passenger_id` → `passengers.id`
-- `bookings.flight_id` → `flights.id`
+## 🗄️ Database Design
 
-## Getting Started
+SkyManage 2.0 uses a relational MySQL database to store and manage airport information.
+
+### Main Database Tables
+
+| Table | Description |
+|-------|-------------|
+| users | Stores authentication and role information |
+| passengers | Stores passenger details |
+| airlines | Stores airline information |
+| flights | Stores flight schedules and routes |
+| bookings | Stores passenger reservations |
+| gates | Stores airport gate information |
+| employees | Stores airport employee records |
+
+### Database Relationships
+
+- Each passenger is associated with a user account.
+- Each flight belongs to an airline.
+- Each flight can be assigned to an airport gate.
+- Each booking connects a passenger with a flight.
+
+---
+
+## ⚙️ Installation & Setup
+
+Follow these steps to run SkyManage 2.0 locally.
 
 ### Prerequisites
 
-- Python 3.9+
-- MySQL 8.0+
-- pip
+Make sure the following are installed:
 
-### Installation
+- Python
+- MySQL Server
+- MySQL Workbench (Optional)
+- Git
+- Visual Studio Code (Recommended)
 
-Clone the repository:
+### Step 1: Clone Repository
 
 ```bash
-git clone https://github.com/bhushancodes07/SkyManage.git
-cd SkyManage
+git clone https://github.com/bhushancodes07/SkyManage2.0.git
 ```
 
-Create and activate a virtual environment:
+Navigate to the project folder:
 
-**Windows (PowerShell)**
-```powershell
+```bash
+cd SkyManage2.0
+```
+
+### Step 2: Create Virtual Environment
+
+```bash
 python -m venv venv
-venv\Scripts\Activate.ps1
 ```
 
-**macOS/Linux**
-```bash
-python3 -m venv venv
-source venv/bin/activate
+Activate the virtual environment on Windows:
+
+```powershell
+.\venv\Scripts\Activate.ps1
 ```
 
-Install dependencies:
+### Step 3: Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Database Setup
+### Step 4: Configure MySQL Database
 
-Run the SQL schema file to create the database and tables:
+Open MySQL Workbench and create the database:
 
-```bash
-mysql -u root -p < database/airport_management.sql
+```sql
+CREATE DATABASE IF NOT EXISTS airport_management;
 ```
 
-Then configure your MySQL connection details (host, user, password, database name) in `app.py`.
+Import the project's SQL schema to create the required tables.
 
-### Running the App
+### Step 5: Configure Environment Variables
+
+Create a `.env` file in the project root.
+
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_mysql_password
+DB_NAME=airport_management
+SECRET_KEY=your_secret_key
+```
+
+Generate a secure secret key using:
+
+```bash
+python -c "import secrets; print(secrets.token_hex(32))"
+```
+
+**Important:** Never upload the `.env` file or real passwords to GitHub.
+
+### Step 6: Run the Application
 
 ```bash
 python app.py
 ```
 
-The app will be available at [http://127.0.0.1:5000](http://127.0.0.1:5000).
+Open your browser and visit:
 
-## Creating an Admin Account
+http://127.0.0.1:5000
 
-By default, registration always creates a user with the **Passenger** role. To create an admin account, register normally and then promote the account via a direct SQL update:
+---
 
-```sql
-UPDATE users SET role = 'Admin' WHERE email = 'your-email@example.com';
-```
+## 🔐 Authentication & Security
 
-## Security Notes
+SkyManage 2.0 implements role-based authentication.
 
-This project includes some intentional simplifications for local/academic use:
+### Passenger Authentication
 
-- ⚠️ Database credentials and the Flask `secret_key` are currently hardcoded in `app.py` — these should be moved to environment variables before any production use.
-- ⚠️ CSRF protection is not yet implemented.
-- ⚠️ Debug mode should remain **off** outside of local development.
-- ✅ Passwords are hashed using Werkzeug's security utilities — plaintext passwords are never stored.
-- ✅ All SQL queries use parameterized statements, so there is no SQL injection risk.
+- Account Registration
+- Login and Logout
+- Password Hashing
+- Session Management
 
-## Roadmap
+### Administrator Authentication
 
-- [ ] Wire the `payments` table into the booking flow
-- [ ] Validate seat numbers against a flight's `total_seats`
-- [ ] Prevent booking or cancelling flights that have already departed
-- [ ] Add pagination to admin tables
-- [ ] Email notifications for bookings
-- [ ] Real-time report updates
+- Role-Based Access Control
+- Protected Admin Routes
+- Administrative Dashboard Access
 
-## Contributing
+### Security Considerations
 
-This is primarily a personal/academic project, but suggestions and improvements are welcome:
+- Passwords are hashed using Werkzeug.
+- Database credentials are configured through environment variables.
+- SQL queries should use parameterized statements.
+- Production deployments should implement CSRF protection.
+- Flask debug mode should be disabled in production.
+- Default administrator credentials must be replaced before deployment.
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m "Add your feature"`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
+---
 
-## License
+## 🔄 System Workflow
 
-This project is licensed under the [MIT License](LICENSE).
+### Passenger Workflow
 
-## Author
+1. Register or log in.
+2. Search available flights.
+3. Select a flight.
+4. Choose a travel class.
+5. Confirm the booking.
+6. View or cancel reservations.
+7. Check flight status.
 
-**[Bhushan Baviskar]**
-GitHub: [Bhushan Baviskar](https://github.com/bhushancodes07)
+### Administrator Workflow
+
+1. Log in as administrator.
+2. Access the admin dashboard.
+3. Manage flights and airlines.
+4. Assign airport gates.
+5. Manage employees and bookings.
+6. Review passengers.
+7. Analyze reports.
+
+---
+
+## 🎯 Project Objectives
+
+- Digitize airport management operations.
+- Simplify flight search and reservation processes.
+- Maintain organized passenger and flight records.
+- Implement role-based user authentication.
+- Demonstrate database relationships and CRUD operations.
+- Provide administrative insights through reports.
+
+---
+
+## 🔮 Future Enhancements
+
+- [ ] Email Booking Confirmations
+- [ ] Online Payment Gateway Integration
+- [ ] Automated Ticket Generation
+- [ ] QR Code-Based Boarding Passes
+- [ ] Advanced Flight Filtering
+- [ ] Real-Time Airline API Integration
+- [ ] Mobile Responsive Improvements
+- [ ] Automated Testing and CI/CD
+- [ ] Secure Production Deployment
+
+---
+
+## 🤝 Contributing
+
+Contributions and suggestions are welcome!
+
+1. Fork this repository.
+2. Create a feature branch.
+3. Make your changes.
+4. Commit your changes.
+5. Push your branch.
+6. Open a Pull Request.
+
+---
+
+## 👨‍💻 Developer
+
+### Bhushan Baviskar
+
+**Computer Engineering Student | Full-Stack Development Enthusiast**
+
+Passionate about building practical software solutions and exploring modern web technologies.
+
+**GitHub:** [@bhushancodes07](https://github.com/bhushancodes07)
+
+**Project Repository:** [SkyManage 2.0](https://github.com/bhushancodes07/SkyManage2.0)
+
+---
+
+<div align="center">
+
+### ⭐ Support the Project
+
+If you find this project useful, consider giving it a star!
+
+**Made with ❤️ using Python, Flask & MySQL**
+
+© 2026 SkyManage 2.0
+
+</div>
