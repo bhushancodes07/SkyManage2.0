@@ -560,6 +560,7 @@ def admin_add_flight():
     try:
 
         cursor = db.cursor(dictionary=True)
+        
 
         cursor.execute(
             """
@@ -2691,6 +2692,78 @@ def admin_reports():
         total_confirmed=total_confirmed,
         avg_booking_value=avg_booking_value
     )
+
+
+THEME_HEAD_SNIPPET = """<script>
+(function () {
+    try {
+        var t = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+})();
+</script>"""
+
+THEME_BODY_SNIPPET = """
+<button type="button" id="theme-toggle" class="theme-toggle"
+        aria-label="Toggle dark mode" title="Toggle dark mode">☾</button>
+<script>
+(function () {
+    var btn = document.getElementById("theme-toggle");
+    var root = document.documentElement;
+
+    function render() {
+        btn.textContent = root.getAttribute("data-theme") === "dark" ? "☀" : "☾";
+    }
+
+    btn.addEventListener("click", function () {
+        var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("theme", next); } catch (e) {}
+        render();
+    });
+
+    render();
+})();
+</script>
+"""
+
+
+@app.after_request
+def inject_theme_toggle(response):
+
+    if (
+        response.status_code == 200
+        and response.mimetype == "text/html"
+        and not response.direct_passthrough
+    ):
+        html = response.get_data(as_text=True)
+
+        if "</body>" in html and 'id="theme-toggle"' not in html:
+            html = html.replace("</head>", THEME_HEAD_SNIPPET + "</head>", 1)
+            html = html.replace("</body>", THEME_BODY_SNIPPET + "</body>", 1)
+            response.set_data(html)
+
+    return response
+@app.after_request
+def inject_theme_toggle(response):
+
+    if (
+        response.status_code == 200
+        and response.mimetype == "text/html"
+        and not response.direct_passthrough
+    ):
+        html = response.get_data(as_text=True)
+
+        if "</body>" in html and 'id="theme-toggle"' not in html:
+            html = html.replace(
+                "</head>",
+                FAVICON_LINK + THEME_HEAD_SNIPPET + "</head>",
+                1
+            )
+            html = html.replace("</body>", THEME_BODY_SNIPPET + "</body>", 1)
+            response.set_data(html)
+
+    return response
 
 # ══════════════════════════════════════════════════════════
 # LOGOUT
