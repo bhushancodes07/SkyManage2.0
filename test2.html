@@ -1,0 +1,42 @@
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-plane"></i>
+            <span>SkyManage</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('passenger_dashboard') }}" class="nav-item active">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('search_flights') }}" class="nav-item active">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Search Flights</span>
+            </a>
+
+            <a href="{{ url_for('my_bookings') }}" class="nav-item active">
+                <i class="fa-solid fa-ticket"></i>
+                <span>My Bookings</span>
+            </a>
+
+            <a href="{{ url_for('flight_status') }}" class="nav-item active">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>Flight Status</span>
+            </a>
+
+            <a href="{{ url_for('profile') }}" class="nav-item active">
+                <i class="fa-solid fa-user"></i>
+                <span>My Profile</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}" class="nav-item logout active">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+
+        </div>

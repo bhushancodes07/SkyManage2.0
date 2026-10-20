@@ -1,0 +1,57 @@
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-plane"></i>
+            <span>SkyManage</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-item active">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('admin_flights') }}" class="nav-item active">
+                <i class="fa-solid fa-plane"></i>
+                <span>Manage Flights</span>
+            </a>
+
+            <a href="{{ url_for('admin_airlines') }}" class="nav-item active">
+                <i class="fa-solid fa-building"></i>
+                <span>Manage Airlines</span>
+            </a>
+
+            <a href="{{ url_for('admin_gates') }}" class="nav-item active">
+                <i class="fa-solid fa-door-open"></i>
+                <span>Manage Gates</span>
+            </a>
+
+            <a href="{{ url_for('admin_bookings') }}" class="nav-item active">
+                <i class="fa-solid fa-ticket"></i>
+                <span>Manage Bookings</span>
+            </a>
+
+            <a href="{{ url_for('admin_passengers') }}" class="nav-item active">
+                <i class="fa-solid fa-users"></i>
+                <span>Passengers</span>
+            </a>
+
+            <a href="{{ url_for('admin_employees') }}" class="nav-item active">
+                <i class="fa-solid fa-user-tie"></i>
+                <span>Employees</span>
+            </a>
+
+            <a href="{{ url_for('admin_reports') }}" class="nav-item">
+                <i class="fa-solid fa-chart-column"></i>
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}" class="nav-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+
+        </div>
