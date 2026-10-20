@@ -72,12 +72,24 @@ def passenger_required():
     return role.lower() == "passenger"
 
 
+
 # ── Default admin ──────────────────────────────────────────
 
 def create_default_admin():
 
     if db is None:
         print("❌ Cannot create default admin because database is not connected.")
+        return
+
+    admin_email = os.environ.get("DEFAULT_ADMIN_EMAIL", "admin@airport.com")
+    admin_password = os.environ.get("DEFAULT_ADMIN_PASSWORD")
+
+    if not admin_password:
+        print("❌ DEFAULT_ADMIN_PASSWORD is not configured in .env")
+        return
+
+    if len(admin_password) < 12:
+        print("❌ Admin password must contain at least 12 characters.")
         return
 
     cursor = None
@@ -89,14 +101,14 @@ def create_default_admin():
         # Check whether an admin already exists
         cursor.execute(
             "SELECT user_id FROM users WHERE email = %s",
-            ("admin@airport.com",)
+            (admin_email,)
         )
 
         admin = cursor.fetchone()
 
         if not admin:
 
-            hashed_password = generate_password_hash("admin123")
+            hashed_password = generate_password_hash(admin_password)
 
             cursor.execute(
                 """
@@ -105,7 +117,7 @@ def create_default_admin():
                 """,
                 (
                     "Airport Admin",
-                    "admin@airport.com",
+                    admin_email,
                     hashed_password,
                     "Admin"
                 )
@@ -113,9 +125,8 @@ def create_default_admin():
 
             db.commit()
 
-            print("✅ Default admin account created.")
-            print("   Email: admin@airport.com")
-            print("   Password: admin123")
+            print("✅ Default admin account created successfully.")
+            print("   Email:", admin_email)
 
         else:
             print("ℹ️ Admin account already exists.")
@@ -131,6 +142,7 @@ def create_default_admin():
 
         if cursor:
             cursor.close()
+
 
 
 # ── Home ───────────────────────────────────────────────────
