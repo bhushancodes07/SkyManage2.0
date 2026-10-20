@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile | Airport Management System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-plane"></i>
+            <span>SkyManage</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('passenger_dashboard') }}" class="nav-item">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('search_flights') }}" class="nav-item">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Search Flights</span>
+            </a>
+
+            <a href="{{ url_for('my_bookings') }}" class="nav-item">
+                <i class="fa-solid fa-ticket"></i>
+                <span>My Bookings</span>
+            </a>
+
+            <a href="{{ url_for('flight_status') }}" class="nav-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>Flight Status</span>
+            </a>
+
+            <a href="{{ url_for('profile') }}" class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <span>My Profile</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}" class="nav-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+
+            <div>
+                <h1>My Profile</h1>
+                <p>View and update your personal information</p>
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+                    {{ session["name"][0].upper() }}
+                </div>
+
+                <div>
+                    <strong>{{ session["name"] }}</strong>
+                    <small>Passenger</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Success Message -->
+        {% if success %}
+
+        <div class="success-message">
+            {{ success }}
+        </div>
+
+        {% endif %}
+
+
+        <!-- Error Message -->
+        {% if error %}
+
+        <div class="error-message">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        {% if passenger %}
+
+        <section class="booking-form-card">
+
+            <h2>Personal Information</h2>
+
+            <p class="booking-subtitle">
+                Name, email, and passport number are fixed and cannot be changed here.
+            </p>
+
+            <form method="POST" action="{{ url_for('profile') }}">
+
+                <div class="booking-info-grid" style="margin-bottom: 20px;">
+
+                    <div>
+                        <small>Full Name</small>
+                        <strong>{{ passenger.name }}</strong>
+                    </div>
+
+                    <div>
+                        <small>Email</small>
+                        <strong>{{ passenger.email }}</strong>
+                    </div>
+
+                    <div>
+                        <small>Passport Number</small>
+                        <strong>{{ passenger.passport_no or 'Not provided' }}</strong>
+                    </div>
+
+                </div>
+
+
+                <!-- Phone -->
+                <div class="booking-input-group">
+
+                    <label for="phone">
+                        Phone Number
+                    </label>
+
+                    <input type="text" id="phone" name="phone" maxlength="15" value="{{ passenger.phone or '' }}"
+                        required>
+
+                </div>
+
+
+                <!-- Gender -->
+                <div class="booking-input-group">
+
+                    <label for="gender">
+                        Gender
+                    </label>
+
+                    <select id="gender" name="gender">
+
+                        <option value="" {% if not passenger.gender %}selected{% endif %}>
+                            Select Gender
+                        </option>
+
+                        <option value="Male" {% if passenger.gender=='Male' %}selected{% endif %}>
+                            Male
+                        </option>
+
+                        <option value="Female" {% if passenger.gender=='Female' %}selected{% endif %}>
+                            Female
+                        </option>
+
+                        <option value="Other" {% if passenger.gender=='Other' %}selected{% endif %}>
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Date of Birth -->
+                <div class="booking-input-group">
+
+                    <label for="date_of_birth">
+                        Date of Birth
+                    </label>
+
+                    <input type="date" id="date_of_birth" name="date_of_birth" value="{{ passenger.date_of_birth }}">
+
+                </div>
+
+
+                <button type="submit" class="confirm-booking-btn">
+                    Save Changes
+                </button>
+
+            </form>
+
+        </section>
+
+        {% endif %}
+
+    </main>
+
+</body>
+
+</html>

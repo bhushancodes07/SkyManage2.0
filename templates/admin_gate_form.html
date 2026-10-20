@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ 'Edit' if gate else 'Add' }} Gate | Airport Management System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-plane"></i>
+            <span>SkyManage</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-item">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('admin_flights') }}" class="nav-item">
+                <i class="fa-solid fa-plane"></i>
+                <span>Manage Flights</span>
+            </a>
+
+            <a href="{{ url_for('admin_airlines') }}" class="nav-item">
+                <i class="fa-solid fa-building"></i>
+                <span>Manage Airlines</span>
+            </a>
+
+            <a href="{{ url_for('admin_gates') }}" class="nav-item">
+                <i class="fa-solid fa-door-open"></i>
+                <span>Manage Gates</span>
+            </a>
+
+            <a href="{{ url_for('admin_bookings') }}" class="nav-item">
+                <i class="fa-solid fa-ticket"></i>
+                <span>Manage Bookings</span>
+            </a>
+
+            <a href="{{ url_for('admin_passengers') }}" class="nav-item">
+                <i class="fa-solid fa-users"></i>
+                <span>Passengers</span>
+            </a>
+
+            <a href="{{ url_for('admin_employees') }}" class="nav-item">
+                <i class="fa-solid fa-user-tie"></i>
+                <span>Employees</span>
+            </a>
+
+            <a href="{{ url_for('admin_reports') }}" class="nav-item">
+                <i class="fa-solid fa-chart-column"></i>
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}" class="nav-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+
+            <div>
+                <h1>{{ 'Edit Gate' if gate else 'Add Gate' }}</h1>
+                <p>{{ 'Update gate details' if gate else 'Create a new gate' }}</p>
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+                    {{ session["name"][0].upper() }}
+                </div>
+
+                <div>
+                    <strong>{{ session["name"] }}</strong>
+                    <small>Admin</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+
+
+        <section class="booking-form-card">
+
+            <form method="POST"
+                action="{{ url_for('admin_edit_gate', gate_id=gate.gate_id) if gate else url_for('admin_add_gate') }}">
+
+                <div class="booking-input-group">
+                    <label for="gate_number">Gate Number</label>
+                    <input type="text" id="gate_number" name="gate_number" required
+                        value="{{ gate.gate_number if gate else '' }}">
+                </div>
+
+                <div class="booking-input-group">
+                    <label for="terminal">Terminal</label>
+                    <input type="text" id="terminal" name="terminal" required
+                        value="{{ gate.terminal if gate else '' }}">
+                </div>
+
+                <div class="booking-input-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" required>
+                        {% for s in ['Available', 'Occupied', 'Maintenance', 'Closed'] %}
+                        <option value="{{ s }}" {% if gate and gate.status==s %}selected{% endif %}>
+                            {{ s }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="confirm-booking-btn">
+                    {{ 'Save Changes' if gate else 'Add Gate' }}
+                </button>
+
+                <a href="{{ url_for('admin_gates') }}" class="cancel-booking-btn">
+                    Cancel
+                </a>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Flight Status | Airport Management System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-plane"></i>
+            <span>SkyManage</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('passenger_dashboard') }}" class="nav-item">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('search_flights') }}" class="nav-item">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Search Flights</span>
+            </a>
+
+            <a href="{{ url_for('my_bookings') }}" class="nav-item">
+                <i class="fa-solid fa-ticket"></i>
+                <span>My Bookings</span>
+            </a>
+
+            <a href="{{ url_for('flight_status') }}" class="nav-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>Flight Status</span>
+            </a>
+
+            <a href="{{ url_for('profile') }}" class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <span>My Profile</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}" class="nav-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+
+            <div>
+                <h1>Flight Status</h1>
+                <p>Check the latest status of any flight</p>
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+                    {{ session["name"][0].upper() }}
+                </div>
+
+                <div>
+                    <strong>{{ session["name"] }}</strong>
+                    <small>Passenger</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Error Message -->
+        {% if error %}
+
+        <div class="error-message">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <!-- Search Form -->
+        <section class="booking-form-card">
+
+            <h2>Check Flight Status</h2>
+
+            <p class="booking-subtitle">
+                Enter a flight number to see its current status.
+            </p>
+
+            <form method="POST" action="{{ url_for('flight_status') }}">
+
+                <div class="booking-input-group">
+
+                    <label for="flight_number">
+                        Flight Number
+                    </label>
+
+                    <input type="text" id="flight_number" name="flight_number" placeholder="Example: AI202"
+                        maxlength="20" value="{{ request.form.flight_number or '' }}" required>
+
+                </div>
+
+                <button type="submit" class="confirm-booking-btn">
+                    Check Status
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- Result -->
+        {% if flight %}
+
+        <section class="booking-flight-card" style="margin-top: 24px;">
+
+            <div class="booking-card-header">
+                <div>
+                    <h2>✈️ {{ flight.flight_number }}</h2>
+                    <p>{{ flight.airline_name }} ({{ flight.airline_code }})</p>
+                </div>
+
+                <span class="booking-status">
+                    {{ flight.status }}
+                </span>
+            </div>
+
+
+            <!-- Route -->
+            <div class="booking-route">
+
+                <div class="booking-airport">
+
+                    <strong>{{ flight.source }}</strong>
+
+                    <span>
+                        {{ flight.departure_time.strftime('%d %b %Y') }}
+                    </span>
+
+                    <span>
+                        {{ flight.departure_time.strftime('%I:%M %p') }}
+                    </span>
+
+                </div>
+
+
+                <div class="booking-route-line">
+                    <span>✈️</span>
+                </div>
+
+
+                <div class="booking-airport">
+
+                    <strong>{{ flight.destination }}</strong>
+
+                    <span>
+                        {{ flight.arrival_time.strftime('%d %b %Y') }}
+                    </span>
+
+                    <span>
+                        {{ flight.arrival_time.strftime('%I:%M %p') }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Info -->
+            <div class="booking-info-grid">
+
+                <div>
+                    <small>Gate</small>
+                    <strong>
+                        {{ flight.gate_number or 'Not Assigned' }}
+                    </strong>
+                </div>
+
+                <div>
+                    <small>Terminal</small>
+                    <strong>
+                        {{ flight.terminal or 'Not Assigned' }}
+                    </strong>
+                </div>
+
+                <div>
+                    <small>Available Seats</small>
+                    <strong>
+                        {{ flight.available_seats }} / {{ flight.total_seats }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </section>
+
+        {% elif searched and not error %}
+
+        <div class="empty-state" style="margin-top: 24px;">
+
+            <div class="empty-icon">
+                📍
+            </div>
+
+            <h3>No flight found</h3>
+
+            <p>
+                Double-check the flight number and try again.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </main>
+
+</body>
+
+</html>

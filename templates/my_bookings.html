@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Bookings | Airport Management System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-plane"></i>
+            <span>SkyManage</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('passenger_dashboard') }}" class="nav-item">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('search_flights') }}" class="nav-item">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Search Flights</span>
+            </a>
+
+            <a href="{{ url_for('my_bookings') }}" class="nav-item">
+                <i class="fa-solid fa-ticket"></i>
+                <span>My Bookings</span>
+            </a>
+
+            <a href="{{ url_for('flight_status') }}" class="nav-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>Flight Status</span>
+            </a>
+
+            <a href="{{ url_for('profile') }}" class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <span>My Profile</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}" class="nav-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+
+            <div>
+                <h1>My Bookings</h1>
+                <p>View and manage your flight bookings</p>
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+                    {{ session["name"][0].upper() }}
+                </div>
+
+                <div>
+                    <strong>{{ session["name"] }}</strong>
+                    <small>Passenger</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Success Message -->
+        {% if success %}
+
+        <div class="success-message">
+            {{ success }}
+        </div>
+
+        {% endif %}
+
+
+        <!-- Error Message -->
+        {% if error %}
+
+        <div class="error-message">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <!-- Booking Summary -->
+
+        <section class="booking-summary">
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    🎫
+                </div>
+
+                <div>
+                    <span>Total Bookings</span>
+                    <strong>{{ bookings|length }}</strong>
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    ✅
+                </div>
+
+                <div>
+                    <span>Confirmed</span>
+                    <strong>{{ confirmed_count }}</strong>
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    ❌
+                </div>
+
+                <div>
+                    <span>Cancelled</span>
+                    <strong>{{ cancelled_count }}</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Bookings -->
+
+        <section class="my-bookings-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Your Bookings</h2>
+                    <p>All your flight reservations appear here.</p>
+                </div>
+
+
+                <a href="{{ url_for('search_flights') }}" class="new-booking-btn">
+                    + Book New Flight
+                </a>
+
+            </div>
+
+
+            {% if bookings %}
+
+            <div class="bookings-list">
+
+                {% for booking in bookings %}
+
+                <div class="booking-card">
+
+                    <!-- Top -->
+
+                    <div class="booking-card-top">
+
+                        <div class="booking-number">
+
+                            <span>Booking ID</span>
+
+                            <strong>
+                                #{{ booking.booking_id }}
+                            </strong>
+
+                        </div>
+
+
+                        <span class="
+                                booking-status-badge
+                                {% if booking.booking_status == 'Confirmed' %}
+                                    confirmed
+                                {% elif booking.booking_status == 'Cancelled' %}
+                                    cancelled
+                                {% else %}
+                                    pending
+                                {% endif %}
+                            ">
+                            {{ booking.booking_status }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- Airline -->
+
+                    <div class="booking-airline-row">
+
+                        <div class="airline-icon">
+                            ✈️
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                {{ booking.airline_name }}
+                            </h3>
+
+                            <span>
+                                {{ booking.airline_code }}
+                                ·
+                                {{ booking.flight_number }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Route -->
+
+                    <div class="my-booking-route">
+
+                        <div>
+
+                            <small>From</small>
+
+                            <strong>
+                                {{ booking.source }}
+                            </strong>
+
+                            <span>
+                                {{ booking.departure_time.strftime('%d %b %Y') }}
+                            </span>
+
+                            <span>
+                                {{ booking.departure_time.strftime('%I:%M %p') }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="my-booking-line">
+                            ✈️
+                        </div>
+
+
+                        <div>
+
+                            <small>To</small>
+
+                            <strong>
+                                {{ booking.destination }}
+                            </strong>
+
+                            <span>
+                                {{ booking.arrival_time.strftime('%d %b %Y') }}
+                            </span>
+
+                            <span>
+                                {{ booking.arrival_time.strftime('%I:%M %p') }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Details -->
+
+                    <div class="booking-details-grid">
+
+                        <div>
+                            <small>Seat</small>
+                            <strong>
+                                {{ booking.seat_number }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <small>Class</small>
+                            <strong>
+                                {{ booking.class }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <small>Gate</small>
+                            <strong>
+                                {{ booking.gate_number or 'Not Assigned' }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <small>Terminal</small>
+                            <strong>
+                                {{ booking.terminal or 'Not Assigned' }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <small>Amount</small>
+                            <strong>
+                                ₹{{ "%.2f"|format(booking.amount) }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <small>Booking Date</small>
+                            <strong>
+                                {{ booking.booking_date.strftime('%d %b %Y') }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Actions -->
+
+                    <!-- Actions -->
+                    <div class="booking-actions">
+                        {% if booking.booking_status == 'Confirmed' %}
+
+                        <form action="{{ url_for('cancel_booking', booking_id=booking.booking_id) }}" method="POST"
+                            style="display: inline;">
+
+                            <button type="submit" class="cancel-booking-action"
+                                onclick="return confirm('Are you sure you want to cancel this booking?');">
+                                Cancel Booking
+                            </button>
+
+                        </form>
+
+                        {% elif booking.booking_status == 'Cancelled' %}
+
+                        <span class="cancelled-booking-action">
+                            Booking Cancelled
+                        </span>
+
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <!-- No bookings -->
+
+            <div class="empty-bookings">
+
+                <div class="empty-booking-icon">
+                    🎫
+                </div>
+
+                <h3>No bookings yet</h3>
+
+                <p>
+                    You haven't booked any flights yet.
+                </p>
+
+
+                <a href="{{ url_for('search_flights') }}" class="new-booking-btn">
+                    Search Flights
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

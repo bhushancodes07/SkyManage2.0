@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Flights | Airport Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-plane"></i>
+            <span>SkyManage</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-item ">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('admin_flights') }}" class="nav-item ">
+                <i class="fa-solid fa-plane"></i>
+                <span>Manage Flights</span>
+            </a>
+
+            <a href="{{ url_for('admin_airlines') }}" class="nav-item ">
+                <i class="fa-solid fa-building"></i>
+                <span>Manage Airlines</span>
+            </a>
+
+            <a href="{{ url_for('admin_gates') }}" class="nav-item ">
+                <i class="fa-solid fa-door-open"></i>
+                <span>Manage Gates</span>
+            </a>
+
+            <a href="{{ url_for('admin_bookings') }}" class="nav-item ">
+                <i class="fa-solid fa-ticket"></i>
+                <span>Manage Bookings</span>
+            </a>
+
+            <a href="{{ url_for('admin_passengers') }}" class="nav-item">
+                <i class="fa-solid fa-users"></i>
+                <span>Passengers</span>
+            </a>
+
+            <a href="{{ url_for('admin_employees') }}" class="nav-item">
+                <i class="fa-solid fa-user-tie"></i>
+                <span>Employees</span>
+            </a>
+
+            <a href="{{ url_for('admin_reports') }}" class="nav-item">
+                <i class="fa-solid fa-chart-column"></i>
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}" class="nav-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+
+            <div>
+                <h1>Manage Flights</h1>
+                <p>Add, edit, or remove flights</p>
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+                    {{ session["name"][0].upper() }}
+                </div>
+
+                <div>
+                    <strong>{{ session["name"] }}</strong>
+                    <small>Admin</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+
+
+        <section class="my-bookings-section">
+
+            <div class="section-heading">
+                <div>
+                    <h2>All Flights</h2>
+                    <p>{{ flights|length }} flight(s) in the system.</p>
+                </div>
+
+                <a href="{{ url_for('admin_add_flight') }}" class="new-booking-btn">
+                    + Add Flight
+                </a>
+            </div>
+
+
+            {% if flights %}
+
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; background: white;">
+
+                    <thead>
+                        <tr style="text-align: left; border-bottom: 2px solid #e5e7eb;">
+                            <th style="padding: 12px;">Flight No.</th>
+                            <th style="padding: 12px;">Airline</th>
+                            <th style="padding: 12px;">Route</th>
+                            <th style="padding: 12px;">Departure</th>
+                            <th style="padding: 12px;">Gate</th>
+                            <th style="padding: 12px;">Status</th>
+                            <th style="padding: 12px;">Seats</th>
+                            <th style="padding: 12px;">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for flight in flights %}
+
+                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                            <td style="padding: 12px;"><strong>{{ flight.flight_number }}</strong></td>
+                            <td style="padding: 12px;">{{ flight.airline_name }} ({{ flight.airline_code }})</td>
+                            <td style="padding: 12px;">{{ flight.source }} → {{ flight.destination }}</td>
+                            <td style="padding: 12px;">{{ flight.departure_time.strftime('%d %b %Y, %I:%M %p') }}</td>
+                            <td style="padding: 12px;">{{ flight.gate_number or '—' }}</td>
+                            <td style="padding: 12px;">{{ flight.status }}</td>
+                            <td style="padding: 12px;">{{ flight.available_seats }} / {{ flight.total_seats }}</td>
+
+                            <td style="padding: 12px; white-space: nowrap;">
+
+                                <a href="{{ url_for('admin_edit_flight', flight_id=flight.flight_id) }}"
+                                    class="card-button" style="margin-right: 6px;">
+                                    Edit
+                                </a>
+
+                                <form method="POST"
+                                    action="{{ url_for('admin_delete_flight', flight_id=flight.flight_id) }}"
+                                    style="display: inline;" onsubmit="return confirm('Delete this flight?');">
+                                    <button type="submit" class="cancel-booking-action"
+                                        style="cursor: pointer; border: none; background: none;">
+                                        Delete
+                                    </button>
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+            </div>
+
+            {% else %}
+
+            <div class="empty-state">
+                <div class="empty-icon">🛫</div>
+                <h3>No flights yet</h3>
+                <p>Add your first flight to get started.</p>
+            </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

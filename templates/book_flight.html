@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Book Flight | Airport Management System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-plane"></i>
+            <span>SkyManage</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('passenger_dashboard') }}" class="nav-item">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('search_flights') }}" class="nav-item">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Search Flights</span>
+            </a>
+
+            <a href="{{ url_for('my_bookings') }}" class="nav-item">
+                <i class="fa-solid fa-ticket"></i>
+                <span>My Bookings</span>
+            </a>
+
+            <a href="{{ url_for('flight_status') }}" class="nav-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>Flight Status</span>
+            </a>
+
+            <a href="{{ url_for('profile') }}" class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <span>My Profile</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}" class="nav-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+
+            <div>
+                <h1>Book Your Flight</h1>
+                <p>Review your flight details and complete your booking</p>
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+                    {{ session["name"][0].upper() }}
+                </div>
+
+                <div>
+                    <strong>{{ session["name"] }}</strong>
+                    <small>Passenger</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Error Message -->
+        {% if error %}
+
+        <div class="error-message">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <!-- Booking Layout -->
+        <section class="booking-container">
+
+            <!-- Flight Details -->
+            <div class="booking-flight-card">
+
+                <div class="booking-card-header">
+                    <div>
+                        <h2>✈️ Flight Details</h2>
+                        <p>Your selected flight</p>
+                    </div>
+
+                    <span class="booking-status">
+                        {{ flight.status }}
+                    </span>
+                </div>
+
+
+                <div class="booking-airline">
+
+                    <div class="airline-icon">
+                        ✈️
+                    </div>
+
+                    <div>
+                        <h3>{{ flight.airline_name }}</h3>
+                        <span>{{ flight.airline_code }}</span>
+                    </div>
+
+                </div>
+
+
+                <!-- Route -->
+                <div class="booking-route">
+
+                    <div class="booking-airport">
+
+                        <strong>{{ flight.source }}</strong>
+
+                        <span>
+                            {{ flight.departure_time.strftime('%d %b %Y') }}
+                        </span>
+
+                        <span>
+                            {{ flight.departure_time.strftime('%I:%M %p') }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="booking-route-line">
+
+                        <span>✈️</span>
+
+                    </div>
+
+
+                    <div class="booking-airport">
+
+                        <strong>{{ flight.destination }}</strong>
+
+                        <span>
+                            {{ flight.arrival_time.strftime('%d %b %Y') }}
+                        </span>
+
+                        <span>
+                            {{ flight.arrival_time.strftime('%I:%M %p') }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Flight Information -->
+                <div class="booking-info-grid">
+
+                    <div>
+                        <small>Flight Number</small>
+                        <strong>{{ flight.flight_number }}</strong>
+                    </div>
+
+                    <div>
+                        <small>Gate</small>
+                        <strong>
+                            {{ flight.gate_number or 'Not Assigned' }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>Terminal</small>
+                        <strong>
+                            {{ flight.terminal or 'Not Assigned' }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>Available Seats</small>
+                        <strong>
+                            {{ flight.available_seats }}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Booking Form -->
+            <div class="booking-form-card">
+
+                <h2>Booking Details</h2>
+
+                <p class="booking-subtitle">
+                    Select your preferred class and enter your seat number.
+                </p>
+
+
+                <form method="POST" action="{{ url_for('book_flight', flight_id=flight.flight_id) }}" id="bookingForm">
+
+
+                    <!-- Class -->
+                    <div class="booking-input-group">
+                        <label for="class">Travel Class</label>
+                        <select id="class" name="class" required>
+                            <option value="">Select Class</option>
+                            <option value="Economy">Economy</option>
+                            <option value="Business">Business</option>
+                        </select>
+                    </div>
+
+                    <!-- Seat Map -->
+                    <div class="booking-input-group">
+
+                        <label>Select Your Seat</label>
+
+                        <div class="seat-map-plane">✈ Front of aircraft</div>
+
+                        <div class="seat-map-wrapper">
+
+                            <div class="cabin-heading">
+                                <span class="cabin-badge cabin-badge-business">Business</span>
+                                <span class="cabin-note">wider seats</span>
+                            </div>
+                            <div id="businessMap" class="seat-map"></div>
+
+                            <div class="cabin-divider"></div>
+
+                            <div class="cabin-heading">
+                                <span class="cabin-badge cabin-badge-economy">Economy</span>
+                            </div>
+                            <div id="economyMap" class="seat-map"></div>
+
+                        </div>
+
+                        <div class="seat-legend">
+                            <span><span class="legend-swatch legend-available"></span>Available</span>
+                            <span><span class="legend-swatch legend-selected"></span>Selected</span>
+                            <span><span class="legend-swatch legend-booked"></span>Booked</span>
+                            <span><span class="legend-swatch legend-otherclass"></span>Not this class</span>
+                        </div>
+
+                        <input type="text" id="seat_number" name="seat_number"
+                            placeholder="Click a seat above, or type one here" maxlength="10" required>
+                        <small class="input-help" id="seatHelp">Tap an available seat, or type a seat number
+                            directly.</small>
+                        <small class="input-error" id="seatError" style="display: none;"></small>
+
+                    </div>
+
+
+                    <!-- Amount -->
+                    <div class="fare-box">
+
+                        <div>
+                            <span>Booking Amount</span>
+                            <strong id="fareAmount">
+                                ₹{{ "%.2f"|format(flight.amount) }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Confirm -->
+                    <button type="submit" class="confirm-booking-btn">
+                        Confirm Booking
+                    </button>
+
+
+                    <a href="{{ url_for('search_flights') }}" class="cancel-booking-btn">
+                        Back to Search
+                    </a>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+    <script>
+        const totalSeats = {{ flight.total_seats }};
+        const bookedSeats = {{ booked_seats| tojson }};
+
+        const businessLetters = ['A', 'B', 'C', 'D'];
+        const economyLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+        const businessCapacity = 12; // 3 rows x 4 seats
+        const businessRows = Math.min(3, Math.ceil(Math.min(businessCapacity, totalSeats) / businessLetters.length));
+        const businessSeatCount = Math.min(businessCapacity, totalSeats);
+
+        const economySeatCount = Math.max(totalSeats - businessSeatCount, 0);
+        const economyRows = Math.ceil(economySeatCount / economyLetters.length);
+
+        const economyFare = 5000.00;
+        const businessFare = 8000.00;
+
+        let selectedBtn = null;
+
+        const classSelect = document.getElementById('class');
+        const fareAmount = document.getElementById('fareAmount');
+        const seatInput = document.getElementById('seat_number');
+        const seatError = document.getElementById('seatError');
+        const seatHelp = document.getElementById('seatHelp');
+
+        function showSeatError(msg) {
+            seatError.textContent = msg;
+            seatError.style.display = 'block';
+            seatHelp.style.display = 'none';
+        }
+
+        function clearSeatError() {
+            seatError.style.display = 'none';
+            seatHelp.style.display = 'block';
+        }
+
+        function clearSelection() {
+            if (selectedBtn) {
+                selectedBtn.classList.remove('seat-selected');
+                selectedBtn = null;
+            }
+        }
+
+        function selectSeat(seatId, btn) {
+            clearSelection();
+            btn.classList.add('seat-selected');
+            selectedBtn = btn;
+            seatInput.value = seatId;
+            clearSeatError();
+
+            if (btn.dataset.cabin !== classSelect.value) {
+                classSelect.value = btn.dataset.cabin;
+                updateFare();
+            }
+        }
+
+        function updateFare() {
+            const amount = classSelect.value === 'Business' ? businessFare : economyFare;
+            fareAmount.textContent = '₹' + amount.toFixed(2);
+            applyClassFilter();
+        }
+
+        function applyClassFilter() {
+            const cls = classSelect.value;
+            document.querySelectorAll('#businessMap button, #economyMap button').forEach(btn => {
+                if (btn.disabled) return;
+                if (!cls) {
+                    btn.classList.remove('seat-dimmed');
+                } else if (btn.dataset.cabin !== cls) {
+                    btn.classList.add('seat-dimmed');
+                } else {
+                    btn.classList.remove('seat-dimmed');
+                }
+            });
+
+            if (selectedBtn && cls && selectedBtn.dataset.cabin !== cls) {
+                clearSelection();
+                seatInput.value = '';
+            }
+        }
+
+        function buildCabin(containerId, cabinName, rowCount, letters, startRow) {
+            const map = document.getElementById(containerId);
+            let placed = 0;
+            const capacity = cabinName === 'Business' ? businessSeatCount : economySeatCount;
+
+            for (let r = 0; r < rowCount; r++) {
+                const rowNum = startRow + r;
+
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'seat-row';
+
+                const rowLabel = document.createElement('div');
+                rowLabel.className = 'seat-row-label';
+                rowLabel.textContent = rowNum;
+                rowDiv.appendChild(rowLabel);
+
+                letters.forEach((letter, idx) => {
+
+                    if (placed >= capacity) return;
+                    placed++;
+
+                    const seatId = rowNum + letter;
+
+                    const seatBtn = document.createElement('button');
+                    seatBtn.type = 'button';
+                    seatBtn.className = cabinName === 'Business' ? 'seat seat-wide' : 'seat';
+                    seatBtn.textContent = letter;
+                    seatBtn.dataset.seat = seatId;
+                    seatBtn.dataset.cabin = cabinName;
+
+                    if (bookedSeats.includes(seatId)) {
+                        seatBtn.classList.add('seat-booked');
+                        seatBtn.disabled = true;
+                    } else {
+                        seatBtn.addEventListener('click', () => selectSeat(seatId, seatBtn));
+                    }
+
+                    rowDiv.appendChild(seatBtn);
+
+                    const mid = Math.floor(letters.length / 2);
+                    if (idx === mid - 1) {
+                        const aisle = document.createElement('div');
+                        aisle.className = 'seat-aisle';
+                        rowDiv.appendChild(aisle);
+                    }
+                });
+
+                map.appendChild(rowDiv);
+            }
+        }
+
+        seatInput.addEventListener('input', function () {
+            const val = this.value.toUpperCase().trim();
+            const btns = document.querySelectorAll('#businessMap button:not(:disabled), #economyMap button:not(:disabled)');
+            let found = null;
+
+            btns.forEach(b => {
+                if (b.dataset.seat === val) found = b;
+            });
+
+            clearSelection();
+
+            if (found) {
+                if (classSelect.value && found.dataset.cabin !== classSelect.value) {
+                    showSeatError('That seat is in ' + found.dataset.cabin + '. Switch travel class or pick another seat.');
+                    return;
+                }
+                found.classList.add('seat-selected');
+                selectedBtn = found;
+                found.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+                clearSeatError();
+            }
+        });
+
+        classSelect.addEventListener('change', updateFare);
+
+        buildCabin('businessMap', 'Business', businessRows, businessLetters, 1);
+        buildCabin('economyMap', 'Economy', economyRows, economyLetters, businessRows + 1);
+    </script>
+
+
+</body>
+
+</html>

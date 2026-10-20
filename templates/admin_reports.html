@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reports | Airport Management System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-plane"></i>
+            <span>SkyManage</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-item">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('admin_flights') }}" class="nav-item">
+                <i class="fa-solid fa-plane"></i>
+                <span>Manage Flights</span>
+            </a>
+
+            <a href="{{ url_for('admin_airlines') }}" class="nav-item">
+                <i class="fa-solid fa-building"></i>
+                <span>Manage Airlines</span>
+            </a>
+
+            <a href="{{ url_for('admin_gates') }}" class="nav-item">
+                <i class="fa-solid fa-door-open"></i>
+                <span>Manage Gates</span>
+            </a>
+
+            <a href="{{ url_for('admin_bookings') }}" class="nav-item">
+                <i class="fa-solid fa-ticket"></i>
+                <span>Manage Bookings</span>
+            </a>
+
+            <a href="{{ url_for('admin_passengers') }}" class="nav-item">
+                <i class="fa-solid fa-users"></i>
+                <span>Passengers</span>
+            </a>
+
+            <a href="{{ url_for('admin_employees') }}" class="nav-item">
+                <i class="fa-solid fa-user-tie"></i>
+                <span>Employees</span>
+            </a>
+
+            <a href="{{ url_for('admin_reports') }}" class="nav-item">
+                <i class="fa-solid fa-chart-column"></i>
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}" class="nav-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+
+            <div>
+                <h1>Reports</h1>
+                <p>Revenue and booking trends</p>
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+                    {{ session["name"][0].upper() }}
+                </div>
+
+                <div>
+                    <strong>{{ session["name"] }}</strong>
+                    <small>Administrator</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Summary -->
+        <section class="booking-summary">
+
+            <div class="summary-card">
+                <div class="summary-icon">💰</div>
+                <div>
+                    <span>Total Revenue</span>
+                    <strong>₹{{ "%.2f"|format(total_revenue) }}</strong>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">🎫</div>
+                <div>
+                    <span>Confirmed Bookings</span>
+                    <strong>{{ total_confirmed }}</strong>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">📈</div>
+                <div>
+                    <span>Avg. Booking Value</span>
+                    <strong>₹{{ "%.2f"|format(avg_booking_value) }}</strong>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- Charts Grid -->
+        <section style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+
+            <!-- Revenue by Month -->
+            <div class="booking-form-card">
+                <h2>Revenue by Month</h2>
+                <p class="booking-subtitle">Last 6 months, confirmed bookings only.</p>
+                <canvas id="revenueChart" height="220"></canvas>
+            </div>
+
+            <!-- Bookings Trend -->
+            <div class="booking-form-card">
+                <h2>Bookings Trend</h2>
+                <p class="booking-subtitle">Daily bookings over the last 30 days.</p>
+                <canvas id="trendChart" height="220"></canvas>
+            </div>
+
+            <!-- Bookings by Status -->
+            <div class="booking-form-card">
+                <h2>Bookings by Status</h2>
+                <p class="booking-subtitle">Confirmed vs. Cancelled vs. Pending.</p>
+                <canvas id="statusChart" height="220"></canvas>
+            </div>
+
+            <!-- Bookings by Class -->
+            <div class="booking-form-card">
+                <h2>Bookings by Class</h2>
+                <p class="booking-subtitle">Economy vs. Business split.</p>
+                <canvas id="classChart" height="220"></canvas>
+            </div>
+
+            <!-- Top Routes -->
+            <div class="booking-form-card" style="grid-column: 1 / -1;">
+                <h2>Top 5 Routes</h2>
+                <p class="booking-subtitle">Most booked routes, confirmed bookings only.</p>
+                <canvas id="routeChart" height="150"></canvas>
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script>
+
+        const revenueLabels = {{ revenue_labels| tojson }};
+        const revenueValues = {{ revenue_values| tojson }};
+
+        const trendLabels = {{ trend_labels| tojson }};
+        const trendValues = {{ trend_values| tojson }};
+
+        const statusLabels = {{ status_labels| tojson }};
+        const statusValues = {{ status_values| tojson }};
+
+        const classLabels = {{ class_labels| tojson }};
+        const classValues = {{ class_values| tojson }};
+
+        const routeLabels = {{ route_labels| tojson }};
+        const routeValues = {{ route_values| tojson }};
+
+        // Revenue by Month
+        new Chart(document.getElementById('revenueChart'), {
+            type: 'bar',
+            data: {
+                labels: revenueLabels,
+                datasets: [{
+                    label: 'Revenue (₹)',
+                    data: revenueValues,
+                    backgroundColor: '#1e3a5f'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Bookings Trend
+        new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: {
+                labels: trendLabels,
+                datasets: [{
+                    label: 'Bookings',
+                    data: trendValues,
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Bookings by Status
+        new Chart(document.getElementById('statusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusValues,
+                    backgroundColor: ['#22c55e', '#ef4444', '#f59e0b']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        // Bookings by Class
+        new Chart(document.getElementById('classChart'), {
+            type: 'pie',
+            data: {
+                labels: classLabels,
+                datasets: [{
+                    data: classValues,
+                    backgroundColor: ['#3b82f6', '#8b5cf6']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        // Top Routes
+        new Chart(document.getElementById('routeChart'), {
+            type: 'bar',
+            data: {
+                labels: routeLabels,
+                datasets: [{
+                    label: 'Bookings',
+                    data: routeValues,
+                    backgroundColor: '#0ea5e9'
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: { legend: { display: false } }
+            }
+        });
+    </script>
+
+</body>
+
+</html>
